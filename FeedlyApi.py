@@ -18,10 +18,12 @@ class FeedlyAPI:
     def __request(self, url, data=None, token=None):
         headers = {}
         url = ProjectConfig.api_prefix+url
+        print url
         if token:
             headers['Authorization'] = 'OAuth %s' % token
         if data:
-            data = urllib.urlencode(data)
+            data = json.dumps(data)
+            headers['Content-Type'] = 'application/json'
         request = urllib2.Request(url, data,  headers)
         try:
             result = urllib2.urlopen(request).read()
@@ -116,14 +118,24 @@ class FeedlyAPI:
         if streamId:
             queries.append('streamId=%s' % streamId)
         url = '/v3/markers/counts?%s' % '&'.join(queries)
-        print url
         result = self.__request(url, None, token)
         jsp_result = json.loads(result)
         return jsp_result
+
+    def getFeedsMetadata(self, token, feedIds):
+        if not token:
+            token = self.token
+        url = '/v3/feeds/.mget'
+        data = feedIds
+        result = self.__request(url, data, token)
+        jsp_result = json.loads(result)
+        return jsp_result
+
 
 
 if __name__ == '__main__':
     fa = FeedlyAPI('sandbox', 'Z5ZSFRASVWCV3EFATRUY')
     #print fa.getToken('AQAAqeZ7InUiOiIxMTA1MjE3ODMwNDgxNjc1NTI3MjAiLCJpIjoiMmU2MWZhMDUtYTA5Zi00MmU0LWFmNzctYzFjNjkyMDk4N2I5IiwicCI6NiwiYSI6IkZlZWRseSBzYW5kYm94IGNsaWVudCIsInQiOjEzODUxOTU4NDIwOTd9', 'http://localhost')
-    print fa.getUnreadConuts('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
+    #print fa.getUnreadConuts('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
+    print fa.getFeedsMetadata('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox', ['feed/http://www.engadget.com/rss.xml', 'feed/http://feeds.engadget.com/weblogsinc/engadget'])
     #print fa.searchFeeds('apple', 'AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
