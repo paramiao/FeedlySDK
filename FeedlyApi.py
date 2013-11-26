@@ -130,12 +130,66 @@ class FeedlyAPI:
         result = self.__request(url, data, token)
         jsp_result = json.loads(result)
         return jsp_result
+    
+    def getStreamIds(self, token, streamId, count=None, ranked=None, unreadOnly=None, newerThan=None, continuation=None):
+        if not token:
+            token = self.token
+        queries = ['streamId=%s' % streamId]
+        if count:
+            queries.append('count=%s' % str(count))
+        if newerThan:
+            queries.append('newerThan=%s' % newerThan)
+        if ranked:
+            queries.append('ranked=%s' % ranked)
+        if unreadOnly:
+            queries.append('unreadOnly=%s' % unreadOnly)
+        if continuation:
+            queries.append('continuation=%s' % continuation)
+        url = '/v3/streams/ids?%s' % '&'.join(queries)
+        result = self.__request(url, None, token)
+        jsp_result = json.loads(result)
+        return jsp_result
+
+    def getStreamContent(self, token, streamId, count=None, ranked=None, unreadOnly=None, newerThan=None, continuation=None):
+        if not token:
+            token = self.token
+        queries = ['streamId=%s' % streamId]
+        if count:
+            queries.append('count=%s' % str(count))
+        if newerThan:
+            queries.append('newerThan=%s' % newerThan)
+        if ranked:
+            queries.append('ranked=%s' % ranked)
+        if unreadOnly:
+            queries.append('unreadOnly=%s' % unreadOnly)
+        if continuation:
+            queries.append('continuation=%s' % continuation)
+        url = '/v3/streams/contents?%s' % '&'.join(queries)
+        result = self.__request(url, None, token)
+        jsp_result = json.loads(result)
+        return jsp_result
 
 
+    def getStreamMixsContent(self, token, streamId, count=None, unreadOnly=None, newerThan=None, hours=None):
+        if not token:
+            token = self.token
+        queries = ['streamId=%s' % streamId]
+        if count:
+            queries.append('count=%s' % str(count))
+        if newerThan:
+            queries.append('newerThan=%s' % newerThan)
+        if unreadOnly:
+            queries.append('unreadOnly=%s' % unreadOnly)
+        if hours:
+            queries.append('hours=%s' % hours)
+        url = '/v3/mixes/contents?%s' % '&'.join(queries)
+        result = self.__request(url, None, token)
+        jsp_result = json.loads(result)
+        return jsp_result
 
 if __name__ == '__main__':
     fa = FeedlyAPI('sandbox', 'Z5ZSFRASVWCV3EFATRUY')
     #print fa.getToken('AQAAqeZ7InUiOiIxMTA1MjE3ODMwNDgxNjc1NTI3MjAiLCJpIjoiMmU2MWZhMDUtYTA5Zi00MmU0LWFmNzctYzFjNjkyMDk4N2I5IiwicCI6NiwiYSI6IkZlZWRseSBzYW5kYm94IGNsaWVudCIsInQiOjEzODUxOTU4NDIwOTd9', 'http://localhost')
     #print fa.getUnreadConuts('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
-    print fa.getFeedsMetadata('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox', ['feed/http://www.engadget.com/rss.xml', 'feed/http://feeds.engadget.com/weblogsinc/engadget'])
+    print fa.getStreamMixsContent('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox', 'feed/http://www.engadget.com/rss.xml')
     #print fa.searchFeeds('apple', 'AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
