@@ -133,6 +133,15 @@ class FeedlyAPI:
         jsp_result = json.loads(result)
         return jsp_result
 
+    def markAsRead(self, token, entryIds):
+        url = "/v3/markers"
+        data = {
+            "action": "markAsRead",
+            "type": "entries",
+            "entryIds": entryIds
+        }
+        print self.__request(url, data, token)
+
     def getFeedsMetadata(self, token, feedIds):
         if not token:
             token = self.token
