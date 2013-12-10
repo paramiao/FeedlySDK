@@ -8,7 +8,6 @@ import urllib2
 import urllib
 import json
 
-
 class FeedlyAPI:
 
     def __init__(self, client_id, client_secret):
@@ -18,7 +17,6 @@ class FeedlyAPI:
     def __request(self, url, data=None, token=None):
         headers = {}
         url = ProjectConfig.api_prefix+url
-        print url
         if token:
             headers['Authorization'] = 'OAuth %s' % token
         if data:
@@ -32,6 +30,20 @@ class FeedlyAPI:
             return e.read() 
         except:
             print traceback.format_exc()
+
+    def refreshToken(self, refresh_token):
+        data = {
+            'refresh_token' : refresh_token,
+            'client_id' : self.client_id,
+            'client_secret' : self.client_secret,
+            'grant_type': 'refresh_token'
+        }
+        url = '/v3/auth/token'
+        result = self.__request(url, data)
+        jsp_result = json.loads(result)
+        if 'access_token' in jsp_result:
+            self.token = jsp_result['access_token']
+        return jsp_result
 
     def getToken(self, code, redirect_uri, state=None):
         data = {
@@ -99,7 +111,7 @@ class FeedlyAPI:
         jsp_result = json.loads(result)
         return jsp_result
 
-    def addTagSave(self, entryId, token, userId='fcea0000-d02a-464a-840e-9403bff8f91e'):
+    def addTagSave(self, userId, entryId, token):
         url ='/v3/tags/user%2F'+userId+'%2Ftag%2Fglobal.saved'
         url = ProjectConfig.api_prefix+url
         data = json.dumps({'entryId':entryId})
@@ -108,7 +120,7 @@ class FeedlyAPI:
         request.add_header('Content-Type','application/json')
         request.add_header('Authorization','OAuth %s' % token)
         request.get_method = lambda: 'PUT'
-        print opener.open(request)
+        opener.open(request)
 
     def searchFeeds(self, keyword, token, number=20):
         if not token:
@@ -140,7 +152,7 @@ class FeedlyAPI:
             "type": "entries",
             "entryIds": entryIds
         }
-        print self.__request(url, data, token)
+        self.__request(url, data, token)
 
     def getFeedsMetadata(self, token, feedIds):
         if not token:
@@ -205,7 +217,6 @@ class FeedlyAPI:
         if continuation:
             queries.append('continuation=%s' % continuation)
         url += '&'.join(queries)
-        print url
         result = self.__request(url, None, token)
         jsp_result = json.loads(result)
         return jsp_result
