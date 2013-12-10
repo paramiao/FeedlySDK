@@ -1,5 +1,5 @@
 #coding=utf8
-project_path='/Users/jacob-old/projects/FeedlyGlassMirror/feedly-glass/lib/FeedlySDK/'
+project_path='/Users/kongmiao/Documents/Project/ParaKindle/'
 isSandbox=True
 api_prefix='http://sandbox.feedly.com'
 if not isSandbox:

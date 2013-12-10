@@ -244,8 +244,7 @@ class FeedlyAPI:
 
 if __name__ == '__main__':
     fa = FeedlyAPI('sandbox', 'Z5ZSFRASVWCV3EFATRUY')
-    #print fa.getToken('AQAAHHGUH_WmknCWidbF1hSFR6p8GH55Iyi4enXbs9I15_PJY7PcILdlodkz5tbxwG5Ln-4B2tiN2KszGmelGlwSF5_OMZO663cmsQORn5KY3WUNUfYKNxyUfkTLny6nLjtIgarggGQDP_9udJAV9A1M', 'http://localhost')
+    #print fa.getToken('AQAAqeZ7InUiOiIxMTA1MjE3ODMwNDgxNjc1NTI3MjAiLCJpIjoiMmU2MWZhMDUtYTA5Zi00MmU0LWFmNzctYzFjNjkyMDk4N2I5IiwicCI6NiwiYSI6IkZlZWRseSBzYW5kYm94IGNsaWVudCIsInQiOjEzODUxOTU4NDIwOTd9', 'http://localhost')
     #print fa.getUnreadConuts('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
-    #print fa.getStreamMixsContent('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox', 'feed/http://www.engadget.com/rss.xml')
+    print fa.getStreamMixsContent('AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox', 'feed/http://www.engadget.com/rss.xml')
     #print fa.searchFeeds('apple', 'AQAAk5J7ImkiOiIyZTYxZmEwNS1hMDlmLTQyZTQtYWY3Ny1jMWM2OTIwOTg3YjkiLCJwIjo2LCJhIjoiRmVlZGx5IHNhbmRib3ggY2xpZW50IiwidCI6MSwidiI6InNhbmRib3giLCJ4Ijoic3RhbmRhcmQiLCJlIjoxMzg1ODAwODQ1OTAwfQ:sandbox')
-    #http://cloud.feedly.com/v3/auth/auth?response_type=code&client_id=sandbox&redirect_uri=http://localhost:8080&scope=https%3A%2F%2Fcloud.feedly.com%2Fsubscriptions
