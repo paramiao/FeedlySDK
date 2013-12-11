@@ -8,7 +8,6 @@ import urllib2
 import urllib
 import json
 
-
 class FeedlyAPI:
 
     def __init__(self, client_id, client_secret):
@@ -18,7 +17,6 @@ class FeedlyAPI:
     def __request(self, url, data=None, token=None):
         headers = {}
         url = ProjectConfig.api_prefix+url
-        print url
         if token:
             headers['Authorization'] = 'OAuth %s' % token
         if data:
@@ -32,6 +30,20 @@ class FeedlyAPI:
             return e.read() 
         except:
             print traceback.format_exc()
+
+    def refreshToken(self, refresh_token):
+        data = {
+            'refresh_token' : refresh_token,
+            'client_id' : self.client_id,
+            'client_secret' : self.client_secret,
+            'grant_type': 'refresh_token'
+        }
+        url = '/v3/auth/token'
+        result = self.__request(url, data)
+        jsp_result = json.loads(result)
+        if 'access_token' in jsp_result:
+            self.token = jsp_result['access_token']
+        return jsp_result
 
     def getToken(self, code, redirect_uri, state=None):
         data = {
@@ -99,6 +111,17 @@ class FeedlyAPI:
         jsp_result = json.loads(result)
         return jsp_result
 
+    def addTagSave(self, userId, entryId, token):
+        url ='/v3/tags/user%2F'+userId+'%2Ftag%2Fglobal.saved'
+        url = ProjectConfig.api_prefix+url
+        data = json.dumps({'entryId':entryId})
+        opener = urllib2.build_opener(urllib2.HTTPHandler)
+        request = urllib2.Request(url, data=data)
+        request.add_header('Content-Type','application/json')
+        request.add_header('Authorization','OAuth %s' % token)
+        request.get_method = lambda: 'PUT'
+        opener.open(request)
+
     def searchFeeds(self, keyword, token, number=20):
         if not token:
             token = self.token
@@ -121,6 +144,15 @@ class FeedlyAPI:
         result = self.__request(url, None, token)
         jsp_result = json.loads(result)
         return jsp_result
+
+    def markAsRead(self, token, entryIds):
+        url = "/v3/markers"
+        data = {
+            "action": "markAsRead",
+            "type": "entries",
+            "entryIds": entryIds
+        }
+        self.__request(url, data, token)
 
     def getFeedsMetadata(self, token, feedIds):
         if not token:
@@ -169,11 +201,33 @@ class FeedlyAPI:
         jsp_result = json.loads(result)
         return jsp_result
 
+    def getStreamContentUser(self, token, userId, category='global.all', count=None, ranked=None, unreadOnly=None, newerThan=None, continuation=None):
+        if not token:
+            token = self.token
+        url = '/v3/streams/user%2F'+userId+'%2Fcategory%2F'+category+'/contents?'
+        queries = []
+        if count:
+            queries.append('count=%s' % str(count))
+        if newerThan:
+            queries.append('newerThan=%s' % newerThan)
+        if ranked:
+            queries.append('ranked=%s' % ranked)
+        if unreadOnly:
+            queries.append('unreadOnly=%s' % unreadOnly)
+        if continuation:
+            queries.append('continuation=%s' % continuation)
+        url += '&'.join(queries)
+        result = self.__request(url, None, token)
+        jsp_result = json.loads(result)
+        return jsp_result
 
-    def getStreamMixsContent(self, token, streamId, count=None, unreadOnly=None, newerThan=None, hours=None):
+
+    def getStreamMixsContent(self, token, streamId, count=None, unreadOnly=None, newerThan=None, hours=None, category=None):
         if not token:
             token = self.token
         queries = ['streamId=%s' % streamId]
+        if category:
+            queries.append('category=%s' % category)
         if count:
             queries.append('count=%s' % str(count))
         if newerThan:
@@ -186,6 +240,7 @@ class FeedlyAPI:
         result = self.__request(url, None, token)
         jsp_result = json.loads(result)
         return jsp_result
+
 
 if __name__ == '__main__':
     fa = FeedlyAPI('sandbox', 'Z5ZSFRASVWCV3EFATRUY')
